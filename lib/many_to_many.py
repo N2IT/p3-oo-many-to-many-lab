@@ -60,9 +60,6 @@ class Contract:
 
     @classmethod
     def contracts_by_date(cls, date):
-        # datime.strptime(date, "%m/%d/%Y")
-        #         return sorted(cls.all, key=lambda contract: datetime.strptime(contract.date, "%m/%d/%Y"))
-        # Convert the target_date from string to datetime for comparison
         target_date_dt = datetime.strptime(date, "%m/%d/%Y")
         
         # Filter contracts to those exactly matching the target_date
@@ -71,7 +68,4 @@ class Contract:
         # Return the filtered list (sorting is not necessary if we're only returning matches for a specific date)
         return filtered_contracts
         
-    
-
-        # breakpoint()
    
