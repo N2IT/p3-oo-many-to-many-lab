@@ -1,12 +1,12 @@
+from datetime import datetime
+
 class Author:
 
     all = []
 
     def __init__(self,name):
         self.name = name
-
-    def add_contracts(self, book):
-        Contract(self, book)
+        Author.all.append(self)
 
     def contracts(self):
         return [contract for contract in Contract.all if contract.author == self ]
@@ -14,12 +14,28 @@ class Author:
     def books(self):
         return [contract.book for contract in self.contracts()]
 
-class Book:
+    def sign_contract(self, book, date, royalties):
+        if isinstance(book, Book):
+            contract = Contract(self, book, date, royalties)
+            return contract
+        # comparing what was asked with what was in the test file was confusing.
+        # test file stated isinstance(contract, Contract) which led me down a path of literally asserting contract, Contract
+        # just needed to valideate the book was instance of Book
 
-    all = []
+    def total_royalties(self):
+        total_royalties = 0
+        for contract in Contract.all:
+            if self == contract.author:
+                total_royalties += contract.royalties
+        return total_royalties
+
+        
+
+class Book:
     
     def __init__(self,title):
         self.title = title
+
 
     def contracts(self):
         return [ contract for contract in Contract.all if contract.book == self]
@@ -27,8 +43,6 @@ class Book:
     def authors(self):
         return [contract.author for contract in self.contracts()]
 
-    def add_author(self, author):  
-        Contract(author, self)
 
 class Contract:
 
@@ -44,9 +58,20 @@ class Contract:
         else:
             raise Exception
 
-
+    @classmethod
+    def contracts_by_date(cls, date):
+        # datime.strptime(date, "%m/%d/%Y")
+        #         return sorted(cls.all, key=lambda contract: datetime.strptime(contract.date, "%m/%d/%Y"))
+        # Convert the target_date from string to datetime for comparison
+        target_date_dt = datetime.strptime(date, "%m/%d/%Y")
         
+        # Filter contracts to those exactly matching the target_date
+        filtered_contracts = [contract for contract in cls.all if datetime.strptime(contract.date, "%m/%d/%Y") == target_date_dt]
         
+        # Return the filtered list (sorting is not necessary if we're only returning matches for a specific date)
+        return filtered_contracts
         
-
     
+
+        # breakpoint()
+   
